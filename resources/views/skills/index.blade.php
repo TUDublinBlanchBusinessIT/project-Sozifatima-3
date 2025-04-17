@@ -7,6 +7,14 @@
 <body>
 <div class="container mt-5">
     <h1>Available Skills</h1>
+
+    {{-- Success message --}}
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -26,3 +34,4 @@
 </div>
 </body>
 </html>
+
