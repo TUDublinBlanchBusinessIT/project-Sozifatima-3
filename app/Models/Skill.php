@@ -10,5 +10,9 @@ class Skill extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'description'];
-}
 
+    public function listings()
+    {
+        return $this->hasMany(Listing::class);
+    }
+}
