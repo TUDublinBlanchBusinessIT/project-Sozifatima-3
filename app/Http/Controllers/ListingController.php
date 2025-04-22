@@ -31,7 +31,7 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'skill_id' => 'required|exists:skills,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -39,9 +39,9 @@ class ListingController extends Controller
             'availability' => 'nullable|string|max:255',
         ]);
 
-        Listing::create($request->all());
+        Listing::create($validated);
 
-        return redirect('/listings')->with('success', 'Listing created successfully!');
+        return redirect()->route('listings.index')->with('success', 'Listing created successfully!');
     }
 
     /**
@@ -68,7 +68,7 @@ class ListingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'skill_id' => 'required|exists:skills,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -77,9 +77,9 @@ class ListingController extends Controller
         ]);
 
         $listing = Listing::findOrFail($id);
-        $listing->update($request->all());
+        $listing->update($validated);
 
-        return redirect('/listings')->with('success', 'Listing updated successfully!');
+        return redirect()->route('listings.index')->with('success', 'Listing updated successfully!');
     }
 
     /**
@@ -90,6 +90,6 @@ class ListingController extends Controller
         $listing = Listing::findOrFail($id);
         $listing->delete();
 
-        return redirect('/listings')->with('success', 'Listing deleted successfully!');
+        return redirect()->route('listings.index')->with('success', 'Listing deleted successfully!');
     }
 }
