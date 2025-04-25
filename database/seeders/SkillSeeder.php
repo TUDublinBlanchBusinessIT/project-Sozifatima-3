@@ -14,6 +14,10 @@ class SkillSeeder extends Seeder
      */
     public function run()
     {
-        Skill::factory()->count(10)->create();
+        // Add skills manually
+        Skill::create(['name' => 'Web Development']);
+        Skill::create(['name' => 'Graphic Design']);
+        Skill::create(['name' => 'Data Analysis']);
+        Skill::create(['name' => 'Marketing']);
     }
 }

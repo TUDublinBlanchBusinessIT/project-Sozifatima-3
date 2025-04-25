@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateListingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,20 +12,19 @@ class CreateUsersTable extends Migration
      * @return void
      */
     public function up()
-{
-    Schema::create('listings', function (Blueprint $table) {
-        $table->id();
-        $table->unsignedBigInteger('skill_id');
-        $table->string('title');
-        $table->text('description')->nullable();
-        $table->string('location')->nullable();
-        $table->string('availability')->nullable();
-        $table->timestamps();
+    {
+        Schema::create('listings', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('skill_id');
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->string('location')->nullable();
+            $table->string('availability')->nullable();
+            $table->timestamps();
 
-        $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
-    });
-}
-
+            $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
+        });
+    }
 
     /**
      * Reverse the migrations.
@@ -34,6 +33,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('listings');
     }
 }
