@@ -5,6 +5,11 @@
 
     <a href="{{ route('listings.create') }}" class="btn btn-primary mb-3">Create New Listing</a>
 
+    {{-- Search form --}}
+    <form method="GET" action="{{ route('listings.index') }}" class="mb-3">
+        <input type="text" name="search" class="form-control" placeholder="Search listings..." value="{{ request()->query('search') }}">
+    </form>
+
     @if($listings->isEmpty())
         <p>No listings available.</p>
     @else
@@ -35,6 +40,10 @@
                 @endforeach
             </tbody>
         </table>
+
+        {{-- Pagination links --}}
+        <div class="d-flex justify-content-center">
+            {{ $listings->links() }}
+        </div>
     @endif
 @endsection
-

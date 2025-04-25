@@ -11,9 +11,19 @@ class ListingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $listings = Listing::with('skill')->get();
+        // Initialize query builder for listings
+        $query = Listing::with('skill');
+
+        // Search listings by title if 'search' query parameter is provided
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        // Paginate listings (10 per page)
+        $listings = $query->paginate(10);
+
         return view('listings.index', compact('listings'));
     }
 
