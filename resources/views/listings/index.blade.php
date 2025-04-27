@@ -3,6 +3,20 @@
 @section('content')
     <h2>All Listings</h2>
 
+    <!-- Success Message -->
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <!-- Error Message -->
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <a href="{{ route('listings.create') }}" class="btn btn-primary mb-3">Create New Listing</a>
 
     {{-- Search form --}}

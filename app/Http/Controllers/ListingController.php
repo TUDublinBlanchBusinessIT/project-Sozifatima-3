@@ -13,10 +13,9 @@ class ListingController extends Controller
      */
     public function index(Request $request)
     {
-        // Initialize query builder for listings
         $query = Listing::with('skill');
 
-        // Search listings by title if 'search' query parameter is provided
+        // Search listings by title
         if ($request->has('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
@@ -49,9 +48,12 @@ class ListingController extends Controller
             'availability' => 'nullable|string|max:255',
         ]);
 
-        Listing::create($validated);
-
-        return redirect()->route('listings.index')->with('success', 'Listing created successfully!');
+        try {
+            Listing::create($validated);
+            return redirect()->route('listings.index')->with('success', 'Listing created successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('listings.index')->with('error', 'Failed to create the listing.');
+        }
     }
 
     /**
@@ -86,10 +88,13 @@ class ListingController extends Controller
             'availability' => 'nullable|string|max:255',
         ]);
 
-        $listing = Listing::findOrFail($id);
-        $listing->update($validated);
-
-        return redirect()->route('listings.index')->with('success', 'Listing updated successfully!');
+        try {
+            $listing = Listing::findOrFail($id);
+            $listing->update($validated);
+            return redirect()->route('listings.index')->with('success', 'Listing updated successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('listings.index')->with('error', 'Failed to update the listing.');
+        }
     }
 
     /**
@@ -97,9 +102,12 @@ class ListingController extends Controller
      */
     public function destroy($id)
     {
-        $listing = Listing::findOrFail($id);
-        $listing->delete();
-
-        return redirect()->route('listings.index')->with('success', 'Listing deleted successfully!');
+        try {
+            $listing = Listing::findOrFail($id);
+            $listing->delete();
+            return redirect()->route('listings.index')->with('success', 'Listing deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('listings.index')->with('error', 'Failed to delete the listing.');
+        }
     }
 }
