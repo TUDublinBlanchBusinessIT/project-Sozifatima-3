@@ -11,16 +11,10 @@ class Listing extends Model
 
     // Fields that can be mass-assigned
     protected $fillable = [
-        'skill_id',
+        'skill',        // <-- CHANGE THIS!
         'title',
         'description',
         'location',
         'availability',
     ];
-
-    // Define the relationship to Skill (Each listing belongs to one skill)
-    public function skill()
-    {
-        return $this->belongsTo(Skill::class);
-    }
 }

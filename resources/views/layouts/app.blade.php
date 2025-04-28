@@ -8,15 +8,11 @@
     <div class="container mt-4">
         <h1 class="mb-4">SkillSwap</h1>
 
-        {{-- Show success message --}}
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
         {{-- Main content --}}
         @yield('content')
     </div>
+
+    {{-- Allow pages to push scripts like SweetAlert --}}
+    @yield('scripts')
 </body>
 </html>
