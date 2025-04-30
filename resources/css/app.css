@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom fade-in transition for page load */
+html {
+    transition: opacity 0.3s ease-in-out;
+}
+
+body {
+    opacity: 0;
+}
+
+body.loaded {
+    opacity: 1;
+}

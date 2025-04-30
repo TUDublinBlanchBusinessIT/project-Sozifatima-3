@@ -2,100 +2,84 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Listing;
+use App\Models\Listing;  // Make sure you import the model
+use App\Models\Skill;    // Import the Skill model for validation (if needed)
 use Illuminate\Http\Request;
 
 class ListingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    // Display all listings with pagination
+    public function index()
     {
-        $query = Listing::query();
+        // Paginate listings (10 per page)
+        $listings = Listing::paginate(10);  // Get listings with pagination (change 10 to any number you prefer)
 
-        if ($request->has('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
-        }
-
-        $listings = $query->paginate(10);
-
-        return view('listings.index', compact('listings'));
+        return view('listings.index', compact('listings'));  // Pass the listings to the view
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $skills = ['Web Development', 'Graphic Design', 'Data Analysis', 'Marketing'];
-        return view('listings.create', compact('skills'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'skill' => 'required|string|max:255',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'nullable|string|max:255',
-            'availability' => 'nullable|string|max:255',
-        ]);
-
-        Listing::create($validated);
-
-        return redirect()->route('listings.index')->with('success', 'Listing created successfully!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
+    // Show a specific listing
     public function show($id)
     {
-        $listing = Listing::findOrFail($id);
-        return view('listings.show', compact('listing'));
+        $listing = Listing::findOrFail($id);  // Find a listing by its ID or fail
+        return view('listings.show', compact('listing'));  // Pass the listing to the view
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    // Show form for creating a new listing
+    public function create()
     {
-        $listing = Listing::findOrFail($id);
-        $skills = ['Web Development', 'Graphic Design', 'Data Analysis', 'Marketing'];
-        return view('listings.edit', compact('listing', 'skills'));
+        // Pass skills data to the create view to allow user to select a skill
+        $skills = Skill::all();  // Get all skills for the dropdown list
+        return view('listings.create', compact('skills'));  // Pass skills to the view
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
+    // Store a new listing in the database
+    public function store(Request $request)
     {
-        $validated = $request->validate([
-            'skill' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'skill_id' => 'required|exists:skills,id',  // Ensure the skill exists in the skills table
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'nullable|string|max:255',
-            'availability' => 'nullable|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required|string|max:255',
+            'availability' => 'required|string|max:255',
         ]);
 
-        $listing = Listing::findOrFail($id);
-        $listing->update($validated);
+        Listing::create($validatedData);  // Create the listing
 
-        return redirect()->route('listings.index')->with('success', 'Listing updated successfully!');
+        return redirect()->route('listings.index');  // Redirect to the listings index page
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Show form for editing an existing listing
+    public function edit($id)
+    {
+        $listing = Listing::findOrFail($id);  // Find the listing by its ID
+        $skills = Skill::all();  // Get all skills for the dropdown list
+        return view('listings.edit', compact('listing', 'skills'));  // Pass the listing and skills to the edit view
+    }
+
+    // Update an existing listing in the database
+    public function update(Request $request, $id)
+    {
+        $listing = Listing::findOrFail($id);  // Find the listing by its ID
+
+        $validatedData = $request->validate([
+            'skill_id' => 'required|exists:skills,id',  // Ensure the skill exists in the skills table
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required|string|max:255',
+            'availability' => 'required|string|max:255',
+        ]);
+
+        $listing->update($validatedData);  // Update the listing with the validated data
+
+        return redirect()->route('listings.index');  // Redirect to the listings index page
+    }
+
+    // Delete a listing from the database
     public function destroy($id)
     {
-        $listing = Listing::findOrFail($id);
-        $listing->delete();
+        $listing = Listing::findOrFail($id);  // Find the listing by its ID
+        $listing->delete();  // Delete the listing
 
-        return redirect()->route('listings.index')->with('success', 'Listing deleted successfully!');
+        return redirect()->route('listings.index');  // Redirect to the listings index page
     }
 }

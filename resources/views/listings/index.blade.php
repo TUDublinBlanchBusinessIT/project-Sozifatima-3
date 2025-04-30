@@ -1,102 +1,41 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>All Listings</h2>
-
-    <a href="{{ route('listings.create') }}" class="btn btn-primary mb-3">Create New Listing</a>
-
-    {{-- Search form --}}
-    <form method="GET" action="{{ route('listings.index') }}" class="mb-3">
-        <input type="text" name="search" class="form-control" placeholder="Search listings..." value="{{ request()->query('search') }}">
-    </form>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>All Listings</h2>
+        <a href="{{ route('listings.create') }}" class="btn btn-success">+ Create New Listing</a>
+    </div>
 
     @if($listings->isEmpty())
-        <p>No listings available.</p>
+        <div class="alert alert-info">No listings found. Create your first one!</div>
     @else
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Skill</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($listings as $listing)
-                    <tr>
-                        <td>{{ $listing->title }}</td>
-                        <td>{{ $listing->skill }}</td> {{-- Display the skill --}}
-                        <td>{{ $listing->description }}</td>
-                        <td>
-                            <a href="{{ route('listings.edit', $listing->id) }}" class="btn btn-warning">Edit</a>
+        <div class="row">
+            @foreach($listings as $listing)
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $listing->title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ $listing->skill->name }}</h6>
+                            <p class="card-text">{{ Str::limit($listing->description, 100) }}</p>
 
-                            <!-- Delete form with confirmation -->
-                            <form action="{{ route('listings.destroy', $listing->id) }}" method="POST" style="display:inline;" id="delete-form-{{ $listing->id }}">
+                            <a href="{{ route('listings.show', $listing->id) }}" class="btn btn-info btn-sm">View</a>
+                            <a href="{{ route('listings.edit', $listing->id) }}" class="btn btn-warning btn-sm">Edit</a>
+
+                            <form action="{{ route('listings.destroy', $listing->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this listing?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $listing->id }})">Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
 
-        {{-- Pagination links --}}
-        <div class="d-flex justify-content-center">
-            {{ $listings->links() }}
+        <div class="d-flex justify-content-center mt-4">
+            {{ $listings->links() }}  <!-- This will show the pagination links -->
         </div>
     @endif
-@endsection
-
-@section('scripts')
-    {{-- Include SweetAlert2 --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    {{-- Success popup --}}
-    @if(session('success'))
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: '{{ session('success') }}',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'OK'
-            });
-        </script>
-    @endif
-
-    {{-- Error popup --}}
-    @if(session('error'))
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops!',
-                text: '{{ session('error') }}',
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Try Again'
-            });
-        </script>
-    @endif
-
-    {{-- Delete Confirmation Script --}}
-    <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Submit the delete form if confirmed
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            });
-        }
-    </script>
+</div>
 @endsection

@@ -11,10 +11,24 @@ class Listing extends Model
 
     // Fields that can be mass-assigned
     protected $fillable = [
-        'skill',        // <-- CHANGE THIS!
+        'skill_id',
         'title',
         'description',
         'location',
         'availability',
     ];
+
+    // Automatically load the related skill data with the listing
+    protected $with = ['skill']; // ⭐️ Auto-load skill relationship ⭐️
+
+    /**
+     * Define the relationship with the Skill model.
+     * Each listing belongs to one skill.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function skill()
+    {
+        return $this->belongsTo(Skill::class, 'skill_id');  // skill_id is the foreign key for the skill
+    }
 }
