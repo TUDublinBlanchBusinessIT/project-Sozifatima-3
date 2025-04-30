@@ -1,22 +1,19 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import path from 'path';
+// vite.config.js
+const { defineConfig } = require('vite');
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [vue()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'resources/js'),
-    },
-  },
-  server: {
-    proxy: {
-      '/app': 'http://localhost', // Proxy requests to your Laravel backend
-    },
-  },
-  build: {
-    outDir: 'public/build',
-    manifest: true, // This is important for Vite to generate the manifest file
-  },
+module.exports = defineConfig(async () => {
+  // Dynamically import the ESM-only plugin
+  const { default: laravel } = await import('laravel-vite-plugin');
+
+  return {
+    plugins: [
+      laravel({
+        input: [
+          'resources/css/app.css',
+          'resources/js/app.js',
+        ],
+        refresh: true,
+      }),
+    ],
+  };
 });

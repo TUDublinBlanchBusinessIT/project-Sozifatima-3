@@ -5,16 +5,26 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>All Listings</h2>
 
-        <!-- Search and Create New Listing Button -->
         <div class="d-flex align-items-center">
-            <!-- Search input field -->
-            <form action="{{ route('listings.index') }}" method="GET">
-                <input type="text" name="search" id="search" class="form-control mr-2" placeholder="Search..." value="{{ request()->get('search') }}"/>
-                <button type="submit" class="btn btn-primary">Search</button>
+            <!-- Search form inline with input-group -->
+            <form action="{{ route('listings.index') }}" method="GET" class="form-inline mr-3">
+                <div class="input-group">
+                    <input
+                        type="search"
+                        name="search"
+                        id="search"
+                        class="form-control"
+                        placeholder="Search..."
+                        value="{{ request()->get('search') }}"
+                    />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
             </form>
 
             <!-- Create New Listing button -->
-            <a href="{{ route('listings.create') }}" class="btn btn-success ml-2">+ Create New Listing</a>
+            <a href="{{ route('listings.create') }}" class="btn btn-success">+ Create New Listing</a>
         </div>
     </div>
 

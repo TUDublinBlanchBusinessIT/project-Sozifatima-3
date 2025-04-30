@@ -8,31 +8,31 @@ class AddSkillIdToListingsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('listings', function (Blueprint $table) {
-            // Add skill_id as an unsigned big integer
-            $table->unsignedBigInteger('skill_id');
-
-            // Set the foreign key relationship with the 'skills' table
-            $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
+            // Only add the column if it doesn't already exist
+            if (! Schema::hasColumn('listings', 'skill_id')) {
+                $table->foreignId('skill_id')
+                      ->after('id')
+                      ->constrained()
+                      ->onDelete('cascade');
+            }
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('listings', function (Blueprint $table) {
-            // Drop the foreign key and column when rolling back the migration
-            $table->dropForeign(['skill_id']);
-            $table->dropColumn('skill_id');
+            // Only drop if it exists
+            if (Schema::hasColumn('listings', 'skill_id')) {
+                $table->dropForeign(['skill_id']);
+                $table->dropColumn('skill_id');
+            }
         });
     }
 }

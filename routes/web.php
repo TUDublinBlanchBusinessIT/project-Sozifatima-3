@@ -30,4 +30,3 @@ Route::delete('/skills/{id}', [SkillController::class, 'destroy'])->name('skills
 
 // Listings routes (this is what you were missing)
 Route::resource('listings', ListingController::class);
-
