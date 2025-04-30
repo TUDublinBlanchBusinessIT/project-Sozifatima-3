@@ -15,14 +15,11 @@
         </div>
     @endif
 
-    <a href="/skills/create" class="btn btn-primary mb-3">Add New Skill</a>
-
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -30,15 +27,6 @@
                 <tr>
                     <td>{{ $skill->name }}</td>
                     <td>{{ $skill->description }}</td>
-                    <td>
-                        <a href="{{ route('skills.edit', $skill->id) }}" class="btn btn-sm btn-warning">Edit</a>
-
-                        <form action="{{ route('skills.destroy', $skill->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this skill?')">Delete</button>
-                        </form>
-                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -46,5 +34,4 @@
 </div>
 </body>
 </html>
-
 

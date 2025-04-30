@@ -5,14 +5,20 @@ use App\Http\Controllers\SkillController;
 use App\Http\Controllers\ListingController;
 
 /*
-|--------------------------------------------------------------------------
+|----------------------------------------------------------------------
 | Web Routes
-|--------------------------------------------------------------------------
+|----------------------------------------------------------------------
 */
 
+// Home route
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Dashboard route (added this for your reference)
+Route::get('/dashboard', function () {
+    return view('dashboard');  // This can be replaced with your actual dashboard view
+})->middleware(['auth'])->name('dashboard');
 
 // Skills routes
 Route::get('/skills', [SkillController::class, 'index']);
@@ -24,3 +30,4 @@ Route::delete('/skills/{id}', [SkillController::class, 'destroy'])->name('skills
 
 // Listings routes (this is what you were missing)
 Route::resource('listings', ListingController::class);
+
